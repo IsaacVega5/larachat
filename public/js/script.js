@@ -26,7 +26,8 @@ $(function () {
         let message = `<strong>${name}: </strong>${chat}`;
 
         if (name == "") {
-            alert("El nombre no puede estar vacio")
+            alert("El nombre no puede estar vacio");
+            return false;
         }
 
         socket.emit('sendChatToServer', message);
