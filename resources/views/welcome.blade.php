@@ -14,7 +14,85 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="./resourses/css/style.css">
+    {{--
+    <link rel="stylesheet" href="./resourses/css/style.css"> --}}
+
+    <style>
+        .container {
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80%;
+        }
+
+        #chat-tittle {
+            background-color: black;
+            color: white;
+        }
+
+        .chat-row {
+            margin: 50px;
+            width: 100%;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            border: 2px solid black;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        ul li {
+            padding: 8px;
+        }
+
+        ul li:hover {
+            background-color: lightgray;
+        }
+
+        .chat-input {
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 8px 10px;
+            width: 100%;
+        }
+
+        .chat-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            width: 100%;
+        }
+
+        .chat-box {
+            width: 100%;
+        }
+
+        #user-name {
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+
+        #btn-enviar {
+            width: 80px;
+            height: 33px;
+            margin-top: 5px;
+            background: black;
+            color: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+
+        #btn-enviar:active {
+            background-color: white;
+            color: black;
+        }
+    </style>
 </head>
 
 <body>
@@ -25,7 +103,9 @@
         <div class="row chat-row">
             <div class="chat-content">
                 <ul>
-                    <li id="chat-tittle"><stron>Chat:</stron></li>
+                    <li id="chat-tittle">
+                        <stron>Chat:</stron>
+                    </li>
                 </ul>
             </div>
 
@@ -50,7 +130,53 @@
     </script>
 
     <!-- Script -->
-    <script src="{{ asset('../js/script.js ') }}"></script>
+    {{-- <script src="{{ asset('../js/script.js ') }}"></script> --}}
+    <script>
+        $(function () {
+    let ip_adress = '127.0.0.1'; //Esta es la ip de la página
+    let socket_port = '3000'; //El mismo que pusimos en el 'server.listen()'
+    let socket = io(ip_adress + ':' + socket_port); //Le pasamos la ip y el puerto a socket.io
+
+
+
+    let chatInput = $('#chatInput');
+    chatInput.keypress(function (e) {
+        // console.log(message);
+        if (e.which === 13 && !e.shiftKey) {
+            send();
+            return false;
+        }
+    });
+
+    $("#btn-enviar").on('click', function (e) {
+        send();
+        return false;
+    })
+
+    function send() {
+        let chatInput = $('#chatInput');
+        let chat = $(chatInput).html();
+        let name = $('#user-name').val();
+        let message = `<strong>${name}: </strong>${chat}`;
+
+        if (name == "") {
+            alert("El nombre no puede estar vacio");
+            return false;
+        }
+
+        socket.emit('sendChatToServer', message);
+        chatInput.html('');
+
+    }
+
+    socket.on('sendChatToClient', (message) => {
+        // console.log(message);
+        $('.chat-content ul').append(`<li> ${message} </li>`);
+    });
+    //Ahora para crear la conexión
+    // socket.on('connection')
+});
+    </script>
 </body>
 
 </html>
