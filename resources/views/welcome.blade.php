@@ -1,126 +1,168 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Larachat | socket.io</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-
-    {{--
-    <link rel="stylesheet" href="./resourses/css/style.css"> --}}
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat | test</title>
     <style>
-        .container {
-            padding-top: 20px;
+        body {
+            display: flex;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .cont {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            width: 80%;
+            margin: auto;
+            padding: 20px;
+            height: 80%;
+            width: 60%;
+            min-width: 500px;
+            border-radius: 20px;
+            border: 2px solid black;
+            gap: 10px
         }
 
-        #chat-tittle {
+        .chat-box {
+            height: 500px;
+            width: 100%;
+            border: 2px solid black;
+            /* border-radius: 20px; */
+            overflow: hidden;
+        }
+
+        .chat-input,
+        .room-input {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 35px;
+            border-radius: 20px;
+            border: 2px solid black;
+            overflow: hidden;
+        }
+
+        .chat-input *,
+        .room-input * {
+            height: 100%;
+            border: none;
+        }
+
+        span,
+        .btn-send {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 15%;
+        }
+
+        .user-input {
+            width: 70%;
+            padding: 0;
+            border-left: 2px solid black;
+            border-right: 2px solid black;
+            padding-left: 5px;
+            overflow: hidden;
+        }
+
+        #msg-input {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .btn-send {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 15%;
+            min-width: fit-content;
             background-color: black;
             color: white;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
-        .chat-row {
-            margin: 50px;
+        .btn-send:hover {
+            letter-spacing: 2px;
+        }
+
+        .btn-send:active {
+            background-color: white;
+            color: black;
+        }
+
+        .user-name {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
             width: 100%;
+            height: 30px;
+            border: 2px solid black;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        #input-name {
+            height: 100%;
+            width: 85%;
+            border: none;
+            padding-left: 5px;
+            border-left: 2px solid black;
         }
 
         ul {
             margin: 0;
-            padding: 0;
+            height: 100%;
             list-style: none;
-            border: 2px solid black;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            overflow: hidden;
+            padding: 10px;
+            overflow-y: scroll;
         }
 
         ul li {
-            padding: 8px;
+            width: auto;
+            padding: 5px;
         }
 
         ul li:hover {
             background-color: lightgray;
         }
-
-        .chat-input {
-            border: 2px solid black;
-            border-radius: 10px;
-            padding: 8px 10px;
-            width: 100%;
-        }
-
-        .chat-section {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            width: 100%;
-        }
-
-        .chat-box {
-            width: 100%;
-        }
-
-        #user-name {
-            border: 2px solid black;
-            border-radius: 10px;
-            padding: 8px 10px;
-        }
-
-        #btn-enviar {
-            width: 80px;
-            height: 33px;
-            margin-top: 5px;
-            background: black;
-            color: white;
-            border: 2px solid black;
-            border-radius: 10px;
-        }
-
-        #btn-enviar:active {
-            background-color: white;
-            color: black;
-        }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="cont-user-name">
-            <input id="user-name" type="text" placeholder="Nombre...">
+    <div class="cont">
+        <div class="user-name">
+            <span>Name:</span>
+            <input id="input-name" type="text" placeholder="Name...">
         </div>
-        <div class="row chat-row">
-            <div class="chat-content">
-                <ul>
-                    <li id="chat-tittle">
-                        <stron>Chat:</stron>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="chat-section">
-                <div class="chat-box">
-                    <div id="chatInput" class="chat-input bg-white" contenteditable=""></div>
-                </div>
-                <button id="btn-enviar">Enviar</button>
-
-            </div>
+        <div class="chat-box">
+            <ul id="chat-list">
+            </ul>
+        </div>
+        <div class="chat-input">
+            <span>Message:</span>
+            <div id="msg-input" class="user-input" name="user-msg" contenteditable="true"></div>
+            <button id="btn-msg" class="btn-send">Send</button>
+        </div>
+        <div class="room-input">
+            <span>Room:</span>
+            <input id="room-input" class="user-input" type="text" name="user-msg">
+            <button id="btn-room" class="btn-send">Join</button>
         </div>
     </div>
 
-
-    <!-- jquery -->
+    <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 
@@ -130,51 +172,92 @@
     </script>
 
     <!-- Script -->
-    {{-- <script src="{{ asset('../js/script.js ') }}"></script> --}}
     <script>
-        $(function () {
-    let ip_adress = '127.0.0.1'; //Esta es la ip de la página
-    let socket_port = '3000'; //El mismo que pusimos en el 'server.listen()'
-    let socket = io(ip_adress + ':' + socket_port); //Le pasamos la ip y el puerto a socket.io
-
-
-
-    let chatInput = $('#chatInput');
-    chatInput.keypress(function (e) {
-        // console.log(message);
-        if (e.which === 13 && !e.shiftKey) {
-            send();
-            return false;
-        }
+        // import {io} from 'socket.io-client';
+const socket = io('https://socket-io-server-7rlr.onrender.com');
+var room = ""
+$( document ).ready(function(){
+    //Mensaje de conexión
+    socket.on('connect', ()=>{
+        msgNew(`<strong>Connected with id:</strong> ${socket.id}`)
+    });
+    //Recibir mensajes
+    socket.on('share-msg', (msg) =>{
+        msgNew(msg);
     });
 
-    $("#btn-enviar").on('click', function (e) {
+    //Enviar mensaje
+    $('#btn-msg').on('click', function(e){
         send();
-        return false;
-    })
+    });
+    $('#msg-input').on('keypress', function(e){
+        if (e.keyCode === 13 && !e.shiftKey) {
+            e.preventDefault();
+            send();
+        }
+    });
 
-    function send() {
-        let chatInput = $('#chatInput');
-        let chat = $(chatInput).html();
-        let name = $('#user-name').val();
-        let message = `<strong>${name}: </strong>${chat}`;
+    //Unirse a una sala
+    $('#btn-room').on('click', function(e){
+        joinRoom();
+    });
+    $('#room-input').on('keypress', function(e){
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            joinRoom();
+        }
+    });
 
-        if (name == "") {
-            alert("El nombre no puede estar vacio");
-            return false;
+    function joinRoom(){
+        let name = $('#input-name').val();
+        let input_room = $('#room-input').val(); //Get user input room
+
+        if(input_room==""){
+            room = "";
+            return msgNew('<strong>You are in the public chat</strong>')
+        };
+        room = input_room;
+
+        if(name === "") return alert("Write your name");
+
+        
+        // let msgRoom = `<strong style="color:blue">Just join to room:</strong> ${room}`; //Comeback to the user informing his connection to the room
+
+        socket.emit('join-room', room, callback =>{
+            msgNew(callback);
+        });
+        socket.emit('send-msg', `<strong style="color:blue">${name} just join</strong>`, room)
+        // msgNew(msgRoom);
+    }
+    //Enviar un mensaje
+    function send(){
+        let msg = $('#msg-input').html();
+        let name = $('#input-name').val();
+        let chat_msg = ""
+        if (name=="") return alert("Write your name")
+        if (msg=="") return alert("Write your message")
+        
+        let input_room = $('#room-input').val(); //Get user input room
+
+        if(room === ""){
+            chat_msg = input_room === "" ? `<strong>${name}:</strong> ${msg}` : `<strong style="color:red">(Privado) ${name}: </strong> ${msg}`;
+        }
+        else{
+            chat_msg = `<strong style="color:blue">(${room}) ${name}: </strong> ${msg}`
         }
 
-        socket.emit('sendChatToServer', message);
-        chatInput.html('');
+        msgNew(chat_msg);
+        socket.emit('send-msg', chat_msg, input_room);
+        
+        $('#msg-input').html('');
+    };
 
+    //Añadir un mensaje a la lista
+    function msgNew(msg){
+        let lista = document.getElementById('chat-list')
+        $('#chat-list').append(`<li>${msg}</li>`);
+        $('#chat-list').scrollTop(lista.scrollHeight);
     }
-
-    socket.on('sendChatToClient', (message) => {
-        // console.log(message);
-        $('.chat-content ul').append(`<li> ${message} </li>`);
-    });
-    //Ahora para crear la conexión
-    // socket.on('connection')
 });
     </script>
 </body>
