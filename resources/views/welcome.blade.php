@@ -221,8 +221,6 @@ $( document ).ready(function(){
         if(name === "") return alert("Write your name");
 
         
-        // let msgRoom = `<strong style="color:blue">Just join to room:</strong> ${room}`; //Comeback to the user informing his connection to the room
-
         socket.emit('join-room', room, callback =>{
             msgNew(callback);
         });
